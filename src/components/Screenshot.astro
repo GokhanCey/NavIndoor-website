@@ -1,0 +1,43 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  width?: number;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+}
+
+const { src, alt, width = 340, class: className, loading = 'lazy' } = Astro.props;
+---
+
+<Image
+  src={src}
+  alt={alt}
+  width={width}
+  densities={[1, 1.5, 2]}
+  format="webp"
+  quality={82}
+  class:list={['shot', className]}
+  style={`--shot-max-width: ${width}px`}
+  loading={loading}
+/>
+
+<style>
+  .shot {
+    display: block;
+    width: var(--shot-max-width);
+    max-width: 100%;
+    height: auto;
+    border-radius: 22px;
+    border: 1px solid var(--color-line);
+    box-shadow: 0 24px 48px -28px rgba(19, 19, 19, 0.35);
+    transition: transform 0.2s ease;
+  }
+
+  .shot:hover {
+    transform: scale(1.1);
+  }
+</style>

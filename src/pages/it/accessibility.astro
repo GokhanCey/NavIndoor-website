@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Screenshot from '../../components/Screenshot.astro';
+import IconPanel from '../../components/IconPanel.astro';
+import { useTranslations } from '../../i18n/utils';
+
+import settingsPage from '../../assets/screenshots/settings-page.png';
+
+const locale = 'it' as const;
+const t = useTranslations(locale);
+---
+
+<BaseLayout locale={locale} active="accessibility" title={t('nav.accessibility')}>
+  <section class="wrapper page-header">
+    <h1>{t('nav.accessibility')}</h1>
+    <p class="lede">
+      L'accessibilità non è una funzionalità aggiunta in un secondo momento.
+      È l'obiettivo dichiarato del progetto: rendere gli edifici umanistici
+      della Sapienza percorribili per ogni studente, con particolare
+      attenzione alle disabilità visive e motorie.
+    </p>
+  </section>
+
+  <section class="wrapper section split-section">
+    <div class="split-section__text">
+      <h2>Multimodale, non solo visivo</h2>
+      <p class="section-lede">
+        Le indicazioni arrivano attraverso il canale che funziona meglio per
+        te: audio vocale passo passo, segnali visivi a schermo, e pattern di
+        vibrazione che segnalano svolte e arrivi. Nessun singolo senso è
+        indispensabile per arrivare dove devi andare.
+      </p>
+    </div>
+    <div class="split-section__visual">
+      <IconPanel icon="modalities" label="Audio, visivo e aptico" />
+    </div>
+  </section>
+
+  <section class="wrapper section split-section" style="--visual-width: 200px">
+    <div class="split-section__text">
+      <h2>Pensato per la bassa visione</h2>
+      <p class="section-lede">
+        Un'impostazione dedicata per il supporto alla bassa visione regola
+        l'interfaccia per una migliore leggibilità. Oltre al tema
+        predefinito, sono disponibili una palette High Fidelity e
+        un'opzione Monocromatica ad altissimo contrasto, così non resti
+        vincolato a una combinazione di colori che non funziona per te.
+      </p>
+    </div>
+    <div class="split-section__visual">
+      <Screenshot src={settingsPage} alt="Schermata delle impostazioni di NavIndoor con il supporto per la bassa visione" width={200} />
+    </div>
+  </section>
+
+  <section class="wrapper section split-section">
+    <div class="split-section__text">
+      <h2>Testato con uno screen reader reale</h2>
+      <p class="section-lede">
+        NavIndoor è costruito per funzionare con TalkBack, non solo in teoria.
+        Il supporto è stato aggiunto in modo specifico per creare e modificare
+        eventi personali del calendario con TalkBack attivo, insieme a una
+        semantica dedicata per l'interfaccia del calendario e annunci di data
+        e ora più chiari, fino a correggere un problema per cui le 12:00
+        venivano lette come "mezzogiorno" invece dell'orario esatto.
+      </p>
+    </div>
+    <div class="split-section__visual">
+      <IconPanel icon="screenreader" label="Testato con TalkBack" />
+    </div>
+  </section>
+
+  <section class="wrapper section split-section">
+    <div class="split-section__text">
+      <h2>Un posizionamento che non ti intralcia</h2>
+      <p class="section-lede">
+        Poiché la posizione arriva dai sensori di movimento e non dalla
+        scansione di beacon o dal tenere il telefono alzato verso un lettore,
+        NavIndoor ti traccia in modo passivo mentre cammini. Nessun gesto
+        aggiuntivo necessario per sapere dove ti trovi.
+      </p>
+    </div>
+    <div class="split-section__visual">
+      <IconPanel icon="compass" label="Posizionamento via sensori" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding-block: var(--space-6) var(--space-5);
+  }
+  .page-header h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+  .lede {
+    max-width: 60ch;
+    font-size: 1.125rem;
+  }
+
+  .section {
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-line);
+  }
+  .section-lede {
+    font-size: 1.05rem;
+  }
+
+  .split-section {
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
+  }
+  .split-section__visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (min-width: 700px) {
+    .split-section {
+      grid-template-columns: var(--visual-width, auto) 1fr;
+    }
+    .split-section__visual {
+      justify-content: flex-start;
+      order: 1;
+    }
+    .split-section__text {
+      order: 2;
+    }
+  }
+</style>

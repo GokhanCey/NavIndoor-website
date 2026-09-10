@@ -1,0 +1,149 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import IconPanel from '../../components/IconPanel.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const locale = 'it' as const;
+const t = useTranslations(locale);
+
+const placeholderPapers = [1, 2, 3, 4, 5];
+---
+
+<BaseLayout locale={locale} active="publications" title={t('nav.publications')}>
+  <section class="wrapper page-header">
+    <h1>{t('nav.publications')}</h1>
+    <p class="lede">
+      Gli articoli relativi a questo progetto appariranno qui man mano che
+      verranno pubblicati.
+    </p>
+  </section>
+
+  <section class="wrapper section split-section">
+    <div class="split-section__text">
+      <h2>Cosa aspettarsi</h2>
+      <p class="section-lede">
+        Copriranno le aree su cui il progetto lavora davvero: la navigazione
+        indoor accessibile per studenti con disabilità visive e motorie, il
+        posizionamento senza GPS basato sui sensori inerziali del telefono, e
+        l'interfaccia vocale bilingue costruita per cercare una stanza o una
+        persona per nome.
+      </p>
+    </div>
+    <div class="split-section__visual">
+      <IconPanel icon="research" label="Aree di ricerca" />
+    </div>
+  </section>
+
+  <section class="wrapper section">
+    <h2>In arrivo</h2>
+    <ul class="paper-grid">
+      {
+        placeholderPapers.map((n) => (
+          <li class="paper-card">
+            <svg class="paper-card__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="10" y="6" width="22" height="28" rx="1.5" />
+              <path d="M24 6v8h8" />
+              <line x1="15" y1="20" x2="27" y2="20" />
+              <line x1="15" y1="25" x2="27" y2="25" />
+              <line x1="15" y1="30" x2="22" y2="30" />
+            </svg>
+            <span class="mono paper-card__index">Pubblicazione {String(n).padStart(2, '0')}</span>
+            <p class="paper-card__title">Titolo da annunciare</p>
+            <span class="mono paper-card__status">In preparazione</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding-block: var(--space-6) var(--space-4);
+  }
+  .page-header h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+  .lede {
+    max-width: 60ch;
+    font-size: 1.125rem;
+  }
+  .section {
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-line);
+  }
+  .section-lede {
+    font-size: 1.05rem;
+  }
+
+  .split-section {
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
+  }
+  .split-section__visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (min-width: 700px) {
+    .split-section {
+      grid-template-columns: auto 1fr;
+    }
+    .split-section__visual {
+      justify-content: flex-start;
+      order: 1;
+    }
+    .split-section__text {
+      order: 2;
+    }
+  }
+
+  .paper-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-3);
+    list-style: none;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+  }
+
+  .paper-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    padding: var(--space-3);
+  }
+
+  .paper-card__icon {
+    width: 26px;
+    height: 26px;
+    color: var(--color-accent);
+    margin-bottom: var(--space-1);
+  }
+
+  .paper-card__index {
+    font-size: 0.7rem;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .paper-card__title {
+    margin: 0;
+    font-style: italic;
+    color: var(--color-graphite);
+  }
+
+  .paper-card__status {
+    margin-top: auto;
+    font-size: 0.7rem;
+    color: var(--color-graphite);
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+  }
+</style>

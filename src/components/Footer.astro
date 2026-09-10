@@ -1,0 +1,159 @@
+---
+import { Image } from 'astro:assets';
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/config';
+import labMap from '../assets/lab-map.png';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+
+const mapUrl =
+  'https://www.google.com/maps/place/Ex+Vetrerie+Sciarra/@41.8990849,12.517722,17z/data=!4m6!3m5!1s0x132f619b58296159:0x2af9ea1f2990a9d!8m2!3d41.8990849!4d12.517722!16s%2Fg%2F11bymvjvvf?entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D';
+const email = 'panizzi@di.uniroma1.it';
+const phone = '+39 351 381 19 47';
+---
+
+<footer class="site-footer">
+  <div class="wrapper site-footer__grid">
+    <div class="footer-block">
+      <p class="footer-lab-name">{t('site.name')}</p>
+      <p>Gamification Lab</p>
+      <p>{t('footer.department')}</p>
+      <p>{t('footer.university')}</p>
+    </div>
+
+    <div class="footer-block">
+      <p class="mono footer-label">{t('footer.addressLabel')}</p>
+      <address>
+        {t('footer.addressLine1')}<br />
+        {t('footer.addressLine2')}
+      </address>
+      <a
+        class="footer-map"
+        href={mapUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={t('footer.viewMap')}
+      >
+        <Image src={labMap} alt="" width={96} height={96} format="webp" quality={70} loading="lazy" />
+        <span class="footer-link footer-map__label">{t('footer.viewMap')}</span>
+      </a>
+    </div>
+
+    <div class="footer-block">
+      <p class="mono footer-label">{t('footer.contactLabel')}</p>
+      <p class="mono footer-sublabel">{t('footer.emailLabel')}</p>
+      <a class="footer-link" href={`mailto:${email}`}>{email}</a>
+      <p class="mono footer-sublabel footer-sublabel--spaced">{t('footer.phoneLabel')}</p>
+      <a class="footer-link" href={`tel:${phone.replace(/\s+/g, '')}`}>{phone}</a>
+    </div>
+  </div>
+
+  <div class="wrapper site-footer__bottom mono">
+    <span>{t('site.name')} &middot; {year}</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--color-line);
+    margin-top: var(--space-6);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    padding-block: var(--space-5) var(--space-4);
+    font-size: 0.9rem;
+    color: var(--color-graphite);
+  }
+
+  @media (min-width: 700px) {
+    .site-footer__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .footer-block p {
+    margin: 0 0 0.25rem;
+  }
+
+  .footer-lab-name {
+    font-family: var(--font-editorial);
+    font-size: 1.05rem;
+    color: var(--color-ink);
+  }
+
+  .footer-label {
+    color: var(--color-accent);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: var(--space-1);
+  }
+
+  .footer-sublabel {
+    font-size: 0.7rem;
+    color: var(--color-graphite);
+    margin-bottom: 0.15rem;
+  }
+
+  .footer-sublabel--spaced {
+    margin-top: var(--space-2);
+  }
+
+  address {
+    font-style: normal;
+    margin-bottom: var(--space-1);
+  }
+
+  .footer-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    text-decoration: underline;
+    text-decoration-color: var(--color-line);
+    text-underline-offset: 3px;
+    color: var(--color-ink);
+    transition: color 0.15s ease;
+  }
+
+  .footer-link:hover {
+    color: var(--color-accent);
+  }
+
+  .footer-map {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    text-decoration: none;
+  }
+
+  .footer-map img {
+    display: block;
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    border: 1px solid var(--color-line);
+  }
+
+  .footer-map:hover img {
+    border-color: var(--color-accent);
+  }
+
+  .footer-map__label {
+    min-height: auto;
+  }
+
+  .site-footer__bottom {
+    border-top: 1px solid var(--color-line);
+    padding-block: var(--space-2);
+    font-size: 0.8rem;
+    color: var(--color-graphite);
+  }
+</style>

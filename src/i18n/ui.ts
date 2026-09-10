@@ -1,0 +1,44 @@
+export const ui = {
+  en: {
+    'nav.project': 'Project',
+    'nav.accessibility': 'Accessibility',
+    'nav.publications': 'Publications',
+    'nav.team': 'Team',
+    'site.name': 'NavIndoor',
+    'site.tagline': 'Find your way, indoors.',
+    'site.description':
+      'NavIndoor is an offline-first, voice-driven indoor navigation app built at the Gamification Lab, Sapienza University of Rome, designed to work for every student, including those with visual and motor impairments.',
+    'footer.department': 'Department of Computer Science',
+    'footer.university': 'Sapienza University of Rome',
+    'footer.contactLabel': 'Contact',
+    'footer.addressLabel': 'Address',
+    'footer.emailLabel': 'Email',
+    'footer.phoneLabel': 'Phone',
+    'footer.addressLine1': 'Via dei Volsci, 122, 00185 Rome, Italy',
+    'footer.addressLine2': 'Floor -1, Lab 11',
+    'footer.viewMap': 'View on map',
+    'a11y.skipToContent': 'Skip to content',
+  },
+  it: {
+    'nav.project': 'Progetto',
+    'nav.accessibility': 'Accessibilità',
+    'nav.publications': 'Pubblicazioni',
+    'nav.team': 'Team',
+    'site.name': 'NavIndoor',
+    'site.tagline': 'Trova la tua strada, al chiuso.',
+    'site.description':
+      "NavIndoor è un'app di navigazione indoor offline-first e vocale, sviluppata al Gamification Lab della Sapienza Università di Roma, pensata per funzionare per ogni studente, comprese le persone con disabilità visive e motorie.",
+    'footer.department': 'Dipartimento di Informatica',
+    'footer.university': 'Sapienza Università di Roma',
+    'footer.contactLabel': 'Contatti',
+    'footer.addressLabel': 'Indirizzo',
+    'footer.emailLabel': 'Email',
+    'footer.phoneLabel': 'Telefono',
+    'footer.addressLine1': 'Via dei Volsci, 122, 00185 Roma, Italia',
+    'footer.addressLine2': 'Piano -1, Laboratorio 11',
+    'footer.viewMap': 'Vedi sulla mappa',
+    'a11y.skipToContent': 'Vai al contenuto',
+  },
+} as const;
+
+export type UiKey = keyof (typeof ui)['en'];

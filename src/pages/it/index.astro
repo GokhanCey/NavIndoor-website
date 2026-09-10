@@ -1,0 +1,273 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Screenshot from '../../components/Screenshot.astro';
+import IconPanel from '../../components/IconPanel.astro';
+import { useTranslations } from '../../i18n/utils';
+
+import mapView from '../../assets/screenshots/map-view.png';
+import settingsPage from '../../assets/screenshots/settings-page.png';
+import settingsHighFidelity from '../../assets/screenshots/settings-theme-highfidelity.png';
+import calendarEmpty from '../../assets/screenshots/calendar-empty-state.png';
+import onboardingPermissions from '../../assets/screenshots/onboarding-permissions.png';
+
+const locale = 'it' as const;
+const t = useTranslations(locale);
+
+const features = [
+  {
+    title: 'Accessibilità prima di tutto',
+    body: "Le indicazioni arrivano insieme attraverso audio, voce, vibrazione e segnali visivi, pensate per chi ha disabilità visive o motorie e utili a ogni studente.",
+  },
+  {
+    title: 'Niente GPS, niente beacon, niente hardware aggiuntivo',
+    body: "Il GPS funziona a malapena negli spazi chiusi, quindi NavIndoor stima la tua posizione usando solo i sensori già presenti nel telefono. Niente da installare nell'edificio, niente da portare in più.",
+  },
+  {
+    title: 'Mappe reali, piano per piano',
+    body: "Ogni stanza, corridoio, scala e uscita è digitalizzata dall'edificio reale, non approssimata, per una guida continua mentre ti sposti tra i piani.",
+  },
+  {
+    title: 'Ricerca vocale bilingue, capita anche offline',
+    body: "Chiedi ad alta voce una stanza o una persona, in italiano o in inglese, e un modello sul dispositivo capisce cosa intendi, anche senza connessione.",
+  },
+  {
+    title: 'Il tuo calendario accademico, integrato',
+    body: "Vedi la tua prossima lezione e vieni guidato direttamente all'aula in cui si tiene, senza passare da un'app all'altra.",
+  },
+  {
+    title: 'Personalizzato per te',
+    body: "Cambia lingua quando vuoi, scegli una palette di colori più semplice da leggere, e lascia che l'app si calibri sulla tua altezza per una posizione più precisa.",
+  },
+];
+
+const gallery = [
+  {
+    image: settingsPage,
+    alt: 'Schermata delle impostazioni di NavIndoor con il supporto per la bassa visione',
+    caption: 'Le impostazioni di accessibilità, in primo piano',
+  },
+  {
+    image: settingsHighFidelity,
+    alt: 'Schermata delle impostazioni di NavIndoor nel tema High Fidelity',
+    caption: 'Cambia palette con quella più semplice da leggere per te',
+  },
+  {
+    image: calendarEmpty,
+    alt: 'NavIndoor che chiede di collegare un calendario accademico',
+    caption: 'Le tue lezioni, a portata di tocco',
+  },
+  {
+    image: onboardingPermissions,
+    alt: 'Schermata di onboarding di NavIndoor che spiega i permessi di posizione e movimento',
+    caption: 'Permessi spiegati con chiarezza, niente di nascosto',
+  },
+];
+---
+
+<BaseLayout locale={locale} active="project" title={t('nav.project')}>
+  <section class="hero wrapper" style="--visual-width: 270px">
+    <div class="hero__text">
+      <p class="mono eyebrow">Gamification Lab &middot; Sapienza Università di Roma</p>
+      <h1>{t('site.tagline')}</h1>
+      <p class="lede">{t('site.description')}</p>
+      <div class="store-badges" aria-label="Scarica NavIndoor">
+        <span class="badge-placeholder mono">App Store</span>
+        <span class="badge-placeholder mono">Google Play</span>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <Screenshot src={mapView} alt="NavIndoor con la planimetria dell'edificio Sciarra" width={270} loading="eager" />
+    </div>
+  </section>
+
+  <section class="wrapper section split-section">
+    <div class="split-section__text">
+      <h2>Cos'è NavIndoor</h2>
+      <p class="section-lede">
+        NavIndoor aiuta gli studenti a orientarsi negli edifici della Facoltà di
+        Lettere e Filosofia della Sapienza, quattro edifici distribuiti in una
+        zona storica e densa di Roma. Al chiuso il GPS è inaffidabile, quindi
+        arrivare dall'ingresso a un'aula o a un ufficio specifico ha sempre
+        significato affidarsi a mappe cartacee, alla segnaletica o a chiedere in
+        giro.
+      </p>
+      <p class="section-lede">
+        Il progetto è nato per risolvere questo problema senza aggiungere alcuna
+        infrastruttura agli edifici stessi. Nessun beacon da installare, nessuna
+        triangolazione Wi-Fi da mantenere. Solo un telefono, i sensori già
+        presenti al suo interno, e planimetrie digitalizzate stanza per stanza.
+      </p>
+    </div>
+    <div class="split-section__visual">
+      <IconPanel icon="building" label="4 edifici digitalizzati" />
+    </div>
+  </section>
+
+  <section class="wrapper section">
+    <h2>Funzionalità</h2>
+    <ol class="feature-grid">
+      {
+        features.map((feature, i) => (
+          <li class="feature-card">
+            <span class="mono feature-card__index">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{feature.title}</h3>
+            <p>{feature.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="wrapper section">
+    <h2>In azione</h2>
+    <ul class="gallery">
+      {
+        gallery.map((item) => (
+          <li class="gallery-item">
+            <Screenshot src={item.image} alt={item.alt} width={240} />
+            <p class="gallery-caption">{item.caption}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-6) var(--space-5);
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
+  }
+  .eyebrow {
+    color: var(--color-accent);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    margin-bottom: var(--space-2);
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    max-width: 20ch;
+  }
+  .lede {
+    max-width: 58ch;
+    font-size: 1.125rem;
+  }
+  .store-badges {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+  .badge-placeholder {
+    border: 1px solid var(--color-line);
+    padding: var(--space-1) var(--space-2);
+    font-size: 0.75rem;
+    border-radius: 4px;
+    color: var(--color-graphite);
+  }
+  .hero__visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (min-width: 700px) {
+    .hero {
+      grid-template-columns: 1fr var(--visual-width, auto);
+    }
+    .hero__visual {
+      justify-content: flex-end;
+    }
+  }
+
+  .section {
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-line);
+  }
+  .section-lede {
+    font-size: 1.05rem;
+  }
+
+  .split-section {
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
+  }
+  .split-section__visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (min-width: 700px) {
+    .split-section {
+      grid-template-columns: auto 1fr;
+    }
+    .split-section__visual {
+      justify-content: flex-start;
+      order: 1;
+    }
+    .split-section__text {
+      order: 2;
+    }
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    list-style: none;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+  }
+
+  @media (min-width: 700px) {
+    .feature-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .feature-card__index {
+    display: block;
+    color: var(--color-accent);
+    font-size: 0.85rem;
+    margin-bottom: var(--space-1);
+  }
+
+  .feature-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: var(--space-1);
+  }
+
+  .feature-card p {
+    max-width: 42ch;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    list-style: none;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+  }
+
+  @media (min-width: 560px) {
+    .gallery {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .gallery-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-2);
+  }
+
+  .gallery-caption {
+    font-size: 0.9rem;
+    color: var(--color-graphite);
+    max-width: 30ch;
+  }
+</style>

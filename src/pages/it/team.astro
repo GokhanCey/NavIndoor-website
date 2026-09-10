@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const locale = 'it' as const;
+const t = useTranslations(locale);
+
+const team = [
+  { name: 'Emanuele Panizzi', role: 'Coordinatore scientifico' },
+  { name: 'Gabriella Trasciatti', role: 'Coordinatrice di progetto' },
+  { name: 'Marco Realacci', role: 'Membro del team' },
+  { name: 'Gokhan Ceylan', role: 'Modulo vocale' },
+  { name: 'Federico', role: 'Membro del team' },
+  { name: 'Abeer Alshaer', role: 'Membro del team' },
+  { name: 'Bisante Alba', role: 'Membro del team' },
+  { name: 'Carolina Torba', role: 'Membro del team' },
+  { name: 'Ernesto Montada Romero', role: 'Membro del team' },
+  { name: 'Giovanni Milone', role: 'Membro del team' },
+  { name: 'Lorenzo Antonelli', role: 'Membro del team' },
+  { name: 'Matteo Pacifici', role: 'Membro del team' },
+  { name: 'Nicola Cosentino', role: 'Membro del team' },
+  { name: 'Piolo Llanos', role: 'Membro del team' },
+  { name: 'Stefano Zeppieri', role: 'Membro del team' },
+  { name: 'Venkata Srikanth Varma Datla', role: 'Membro del team' },
+];
+---
+
+<BaseLayout locale={locale} active="team" title={t('nav.team')}>
+  <section class="wrapper page-header">
+    <h1>{t('nav.team')}</h1>
+    <p class="lede">"Nessun singolo senso dovrebbe essere indispensabile per trovare la propria strada."<br />Dalla ricerca all'ultima riga di codice, ecco chi ha costruito NavIndoor.</p>
+  </section>
+
+  <section class="wrapper team-grid">
+    {
+      team.map((person) => (
+        <div class="team-card">
+          <span class="mono team-role">{person.role}</span>
+          <p class="team-name">{person.name}</p>
+        </div>
+      ))
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding-block: var(--space-6) var(--space-4);
+  }
+  .page-header h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+  .lede {
+    max-width: 60ch;
+    font-size: 1.125rem;
+    font-style: italic;
+  }
+  .team-grid {
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-line);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .team-role {
+    display: block;
+    color: var(--color-accent);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.2rem;
+  }
+  .team-name {
+    margin: 0;
+    color: var(--color-ink);
+    font-size: 1.05rem;
+  }
+
+  @media (min-width: 560px) {
+    .team-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .team-grid {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,267 @@
+---
+import { pathTo, type RouteKey } from '../i18n/config';
+import { otherLocale, switchLocalePath, useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/config';
+
+interface Props {
+  locale: Locale;
+  active?: RouteKey;
+}
+
+const { locale, active } = Astro.props;
+const t = useTranslations(locale);
+const alt = otherLocale(locale);
+const altPath = switchLocalePath(Astro.url.pathname, alt);
+
+const navItems: { key: RouteKey; label: string }[] = [
+  { key: 'project', label: t('nav.project') },
+  { key: 'accessibility', label: t('nav.accessibility') },
+  { key: 'publications', label: t('nav.publications') },
+  { key: 'team', label: t('nav.team') },
+];
+---
+
+<header class="site-nav">
+  <div class="wrapper site-nav__inner">
+    <div class="brand-group">
+      <button
+        type="button"
+        class="nav-toggle"
+        aria-expanded="false"
+        aria-controls="primary-nav"
+        aria-label="Menu"
+      >
+        <svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true">
+          <path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="2" />
+        </svg>
+      </button>
+
+      <a class="wordmark" href={pathTo(locale, 'project')}>{t('site.name')}</a>
+    </div>
+
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary">
+      <ul>
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                href={pathTo(locale, item.key)}
+                aria-current={active === item.key ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="lang-switch mono" role="group" aria-label="Language">
+      <a
+        href={locale === 'it' ? Astro.url.pathname : altPath}
+        aria-current={locale === 'it' ? 'true' : undefined}
+        hreflang="it"
+        lang="it"
+      >
+        IT
+      </a>
+      <span aria-hidden="true">|</span>
+      <a
+        href={locale === 'en' ? Astro.url.pathname : altPath}
+        aria-current={locale === 'en' ? 'true' : undefined}
+        hreflang="en"
+        lang="en"
+      >
+        EN
+      </a>
+    </div>
+  </div>
+
+  <noscript>
+    <style is:global>
+      /* no-JS fallback: keep the nav reachable if the toggle can't run */
+      .nav-toggle {
+        display: none !important;
+      }
+      .primary-nav {
+        display: block !important;
+        position: static !important;
+        border-bottom: none !important;
+        padding: 0 !important;
+      }
+    </style>
+  </noscript>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const nav = document.getElementById('primary-nav');
+
+  toggle?.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    nav?.classList.toggle('is-open', !expanded);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      toggle.setAttribute('aria-expanded', 'false');
+      nav?.classList.remove('is-open');
+      toggle.focus();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!toggle || !nav) return;
+    if (toggle.getAttribute('aria-expanded') !== 'true') return;
+    const target = e.target as Node;
+    if (toggle.contains(target) || nav.contains(target)) return;
+    toggle.setAttribute('aria-expanded', 'false');
+    nav.classList.remove('is-open');
+  });
+</script>
+
+<style>
+  .site-nav {
+    border-bottom: 1px solid var(--color-line);
+    position: relative;
+  }
+
+  .site-nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-block: var(--space-2);
+  }
+
+  .brand-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  .wordmark {
+    font-family: var(--font-editorial);
+    font-size: 1.25rem;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: color 0.15s ease;
+  }
+
+  .wordmark:hover {
+    color: var(--color-accent);
+  }
+
+  .primary-nav ul {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .primary-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--space-1);
+    text-decoration: none;
+    font-size: 0.95rem;
+    color: var(--color-ink);
+    transition: color 0.15s ease;
+  }
+
+  .primary-nav a:hover {
+    color: var(--color-accent);
+  }
+
+  .primary-nav a[aria-current='page'] {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  .lang-switch {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .lang-switch a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    text-decoration: none;
+    color: var(--color-graphite);
+    transition: color 0.15s ease;
+  }
+
+  .lang-switch a:hover {
+    color: var(--color-ink);
+  }
+
+  .lang-switch a[aria-current='true'] {
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .nav-toggle {
+    display: none;
+  }
+
+  @media (max-width: 699.98px) {
+    .site-nav__inner {
+      flex-wrap: wrap;
+    }
+
+    .nav-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      border: none;
+      background: none;
+      color: var(--color-ink);
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+
+    .nav-toggle:hover {
+      color: var(--color-accent);
+    }
+
+    .nav-toggle[aria-expanded='true'] {
+      color: var(--color-accent);
+    }
+
+    .primary-nav {
+      display: none;
+      flex-basis: 100%;
+      position: absolute;
+      inset-inline: 0;
+      top: 100%;
+      background: var(--color-paper);
+      border-bottom: 1px solid var(--color-line);
+      padding: var(--space-2) var(--space-3) var(--space-3);
+    }
+
+    .primary-nav.is-open {
+      display: block;
+    }
+
+    .primary-nav ul {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .primary-nav a {
+      font-size: 1.05rem;
+    }
+  }
+</style>

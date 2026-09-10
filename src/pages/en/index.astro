@@ -1,0 +1,272 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Screenshot from '../../components/Screenshot.astro';
+import IconPanel from '../../components/IconPanel.astro';
+import { useTranslations } from '../../i18n/utils';
+
+import mapView from '../../assets/screenshots/map-view.png';
+import settingsPage from '../../assets/screenshots/settings-page.png';
+import settingsHighFidelity from '../../assets/screenshots/settings-theme-highfidelity.png';
+import calendarEmpty from '../../assets/screenshots/calendar-empty-state.png';
+import onboardingPermissions from '../../assets/screenshots/onboarding-permissions.png';
+
+const locale = 'en' as const;
+const t = useTranslations(locale);
+
+const features = [
+  {
+    title: 'Accessibility first',
+    body: "Directions are delivered through audio, speech, vibration, and visual cues together, designed around visual and motor impairments and useful to every student.",
+  },
+  {
+    title: 'No GPS, no beacons, no extra hardware',
+    body: 'GPS barely works indoors, so NavIndoor estimates your position using only the sensors already built into your phone. Nothing to install in the building, nothing extra to carry.',
+  },
+  {
+    title: 'Real, floor-by-floor maps',
+    body: 'Every room, corridor, staircase, and exit is digitized from the actual building, not approximated, for continuous guidance as you move between floors.',
+  },
+  {
+    title: 'Bilingual voice search, understood offline',
+    body: "Ask for a room or a person out loud, in Italian or English, and an on-device model resolves what you meant, even with no connection.",
+  },
+  {
+    title: 'Your academic calendar, built in',
+    body: "See your next lecture and get routed straight to the room it's in, without switching between apps.",
+  },
+  {
+    title: 'Personalized to you',
+    body: "Switch languages anytime, pick a color palette that's easiest to read, and let the app calibrate to your height for sharper positioning.",
+  },
+];
+
+const gallery = [
+  {
+    image: settingsPage,
+    alt: 'NavIndoor settings screen with the Low Vision Support toggle',
+    caption: 'Accessibility settings, front and center',
+  },
+  {
+    image: settingsHighFidelity,
+    alt: 'NavIndoor settings screen shown in the High Fidelity color theme',
+    caption: "Switch the palette to whatever's easiest to read",
+  },
+  {
+    image: calendarEmpty,
+    alt: 'NavIndoor prompting to connect an academic calendar',
+    caption: 'Your lectures, one tap away',
+  },
+  {
+    image: onboardingPermissions,
+    alt: 'NavIndoor onboarding screen explaining location and motion permissions',
+    caption: 'Permissions explained plainly, nothing hidden',
+  },
+];
+---
+
+<BaseLayout locale={locale} active="project" title={t('nav.project')}>
+  <section class="hero wrapper" style="--visual-width: 270px">
+    <div class="hero__text">
+      <p class="mono eyebrow">Gamification Lab &middot; Sapienza University of Rome</p>
+      <h1>{t('site.tagline')}</h1>
+      <p class="lede">{t('site.description')}</p>
+      <div class="store-badges" aria-label="Download NavIndoor">
+        <span class="badge-placeholder mono">App Store</span>
+        <span class="badge-placeholder mono">Google Play</span>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <Screenshot src={mapView} alt="NavIndoor showing the Sciarra building floor plan" width={270} loading="eager" />
+    </div>
+  </section>
+
+  <section class="wrapper section split-section">
+    <div class="split-section__text">
+      <h2>What is NavIndoor</h2>
+      <p class="section-lede">
+        NavIndoor helps students find their way through the Faculty of Humanities
+        at Sapienza University, four buildings spread across a dense, historic
+        part of Rome. Indoors, GPS is unreliable at best, so getting from the
+        entrance to a specific classroom or office has always meant paper maps,
+        signage, or asking around.
+      </p>
+      <p class="section-lede">
+        The project set out to solve that without adding any infrastructure to
+        the buildings themselves. No beacons to install, no Wi-Fi triangulation
+        to maintain. Just a phone, the sensors already inside it, and floor
+        plans digitized room by room.
+      </p>
+    </div>
+    <div class="split-section__visual">
+      <IconPanel icon="building" label="4 buildings, digitized" />
+    </div>
+  </section>
+
+  <section class="wrapper section">
+    <h2>Features</h2>
+    <ol class="feature-grid">
+      {
+        features.map((feature, i) => (
+          <li class="feature-card">
+            <span class="mono feature-card__index">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{feature.title}</h3>
+            <p>{feature.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="wrapper section">
+    <h2>See it in action</h2>
+    <ul class="gallery">
+      {
+        gallery.map((item) => (
+          <li class="gallery-item">
+            <Screenshot src={item.image} alt={item.alt} width={240} />
+            <p class="gallery-caption">{item.caption}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-6) var(--space-5);
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
+  }
+  .eyebrow {
+    color: var(--color-accent);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    margin-bottom: var(--space-2);
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    max-width: 20ch;
+  }
+  .lede {
+    max-width: 58ch;
+    font-size: 1.125rem;
+  }
+  .store-badges {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+  .badge-placeholder {
+    border: 1px solid var(--color-line);
+    padding: var(--space-1) var(--space-2);
+    font-size: 0.75rem;
+    border-radius: 4px;
+    color: var(--color-graphite);
+  }
+  .hero__visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (min-width: 700px) {
+    .hero {
+      grid-template-columns: 1fr var(--visual-width, auto);
+    }
+    .hero__visual {
+      justify-content: flex-end;
+    }
+  }
+
+  .section {
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-line);
+  }
+  .section-lede {
+    font-size: 1.05rem;
+  }
+
+  .split-section {
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
+  }
+  .split-section__visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (min-width: 700px) {
+    .split-section {
+      grid-template-columns: auto 1fr;
+    }
+    .split-section__visual {
+      justify-content: flex-start;
+      order: 1;
+    }
+    .split-section__text {
+      order: 2;
+    }
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    list-style: none;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+  }
+
+  @media (min-width: 700px) {
+    .feature-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .feature-card__index {
+    display: block;
+    color: var(--color-accent);
+    font-size: 0.85rem;
+    margin-bottom: var(--space-1);
+  }
+
+  .feature-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: var(--space-1);
+  }
+
+  .feature-card p {
+    max-width: 42ch;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    list-style: none;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+  }
+
+  @media (min-width: 560px) {
+    .gallery {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .gallery-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-2);
+  }
+
+  .gallery-caption {
+    font-size: 0.9rem;
+    color: var(--color-graphite);
+    max-width: 30ch;
+  }
+</style>

@@ -1,0 +1,36 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+import { useTranslations } from '../i18n/utils';
+import type { Locale, RouteKey } from '../i18n/config';
+
+interface Props {
+  locale: Locale;
+  active?: RouteKey;
+  title: string;
+  description?: string;
+}
+
+const { locale, active, title, description } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content={description ?? t('site.description')} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} &middot; {t('site.name')}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">{t('a11y.skipToContent')}</a>
+    <Nav locale={locale} active={active} />
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>
