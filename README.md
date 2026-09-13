@@ -6,6 +6,8 @@ Sapienza University of Rome.
 
 Built with [Astro](https://astro.build).
 
+![NavIndoor website homepage](docs/screenshot-home.png)
+
 ## Development
 
 ```sh
