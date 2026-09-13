@@ -1,0 +1,707 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import IconPanel from '../../components/IconPanel.astro';
+import { useTranslations } from '../../i18n/utils';
+import { CELLS, ROOMS } from '../../lib/routeGrid';
+
+const locale = 'en' as const;
+const t = useTranslations(locale);
+
+const roomIndex = new Map(ROOMS.map((room, i) => [room.id, i + 1]));
+---
+
+<BaseLayout locale={locale} active="demo" title={t('nav.demo')}>
+  <section class="wrapper page-header">
+    <div class="page-header__text">
+      <h1>{t('nav.demo')}</h1>
+      <p class="lede">
+        A small, honest slice of the app running for real in your browser: a
+        working pathfinder, a working voice and text resolver, and the same
+        color palettes the app ships with. Not a mockup, not a recording,
+        just scaled down to a handful of rooms instead of the full building.
+      </p>
+    </div>
+    <div class="page-header__visual">
+      <IconPanel icon="route" label="Try it live" />
+    </div>
+  </section>
+
+  <section class="wrapper section demo-section">
+    <div class="demo-panel" id="demoPanel" data-theme="default">
+      <div class="demo-panel__bar">
+        <div class="demo-search">
+          <input id="demoQuery" type="text" placeholder="e.g. Aula Magna" autocomplete="off" aria-label="Search for a room" />
+          <button id="demoMic" class="demo-icon-btn" type="button" aria-label="Search by voice">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </button>
+          <button id="demoSearchBtn" class="demo-run-btn" type="button">Find</button>
+        </div>
+
+        <div class="demo-theme-switch mono" role="group" aria-label="Color palette">
+          <button type="button" data-theme-choice="default" class="is-active">Default</button>
+          <button type="button" data-theme-choice="highfidelity">High Fidelity</button>
+          <button type="button" data-theme-choice="mono">Monochrome</button>
+        </div>
+      </div>
+
+      <p id="demoHint" class="demo-hint">Search above, or tap a room on the plan.</p>
+
+      <div class="demo-grid" id="demoGrid" role="group" aria-label="Simplified floor plan of a small slice of Sciarra">
+        {
+          CELLS.map((cell) => {
+            if (cell.type === 'wall') {
+              return <div class="demo-cell demo-cell--wall" aria-hidden="true" />;
+            }
+            if (cell.type === 'floor') {
+              return <div class="demo-cell demo-cell--floor" data-row={cell.row} data-col={cell.col} aria-hidden="true" />;
+            }
+            if (cell.type === 'entrance') {
+              return (
+                <button
+                  type="button"
+                  class="demo-cell demo-cell--entrance"
+                  data-row={cell.row}
+                  data-col={cell.col}
+                  data-room-id={cell.roomId}
+                  aria-label="Entrance, your starting point"
+                  title="Entrance"
+                >
+                  <span aria-hidden="true">•</span>
+                </button>
+              );
+            }
+            const room = ROOMS.find((r) => r.id === cell.roomId)!;
+            return (
+              <button
+                type="button"
+                class="demo-cell demo-cell--room"
+                data-row={cell.row}
+                data-col={cell.col}
+                data-room-id={cell.roomId}
+                aria-label={room.name}
+                title={room.name}
+              >
+                <span aria-hidden="true">{roomIndex.get(cell.roomId!)}</span>
+              </button>
+            );
+          })
+        }
+      </div>
+
+      <ul class="demo-legend mono">
+        {
+          ROOMS.map((room, i) => (
+            <li>
+              <span class="demo-legend__num">{i + 1}</span> {room.name}
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="demo-lecture">
+        <div>
+          <p class="mono demo-lecture__label">Next class</p>
+          <p class="demo-lecture__title">Linguistics 101 &middot; Aula Magna &middot; 14:00</p>
+        </div>
+        <button id="demoLectureBtn" class="demo-lecture__btn" type="button">Get directions</button>
+      </div>
+
+      <div class="demo-locate">
+        <button id="demoLocateBtn" class="demo-locate__btn" type="button">Use my location</button>
+        <p id="demoLocateHint" class="demo-locate__hint"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrapper section split-section">
+    <div class="split-section__text">
+      <h2>How the routing works</h2>
+      <p class="section-lede">
+        Tapping a room runs a real A* search over the small graph above:
+        every walkable tile is a node, walls simply aren't connected to
+        anything, and the algorithm expands outward by shortest-distance
+        estimate until it reaches the destination. The full app runs the
+        exact same algorithm over the real floor plans, walls and
+        obstacles included, it's just a much bigger graph.
+      </p>
+    </div>
+    <div class="split-section__visual">
+      <IconPanel icon="route" label="A* pathfinding" />
+    </div>
+  </section>
+
+  <section class="wrapper section split-section">
+    <div class="split-section__text">
+      <h2>How the voice search works</h2>
+      <p class="section-lede">
+        Typing or speaking a query runs it through the same resolution
+        steps as the real module: normalize the text, strip filler words
+        in either language, then score it against known rooms with edit
+        distance. Try a typo, or a partial name, it's built to survive
+        both, not just exact matches.
+      </p>
+    </div>
+    <div class="split-section__visual">
+      <IconPanel icon="mic" label="Fuzzy voice matching" />
+    </div>
+  </section>
+
+  <section class="wrapper section demo-disclaimer">
+    <p class="mono">
+      This demo covers 4 rooms and one small stretch of Sciarra, not the
+      full 243-room repository.
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { ENTRANCE_ID, ROOMS, cellByRoomId, findPath, resolveQuery } from '../../lib/routeGrid';
+
+  const grid = document.getElementById('demoGrid')!;
+  const hint = document.getElementById('demoHint')!;
+  const queryInput = document.getElementById('demoQuery') as HTMLInputElement;
+  const searchBtn = document.getElementById('demoSearchBtn')!;
+  const micBtn = document.getElementById('demoMic') as HTMLButtonElement;
+  const lectureBtn = document.getElementById('demoLectureBtn')!;
+  const locateBtn = document.getElementById('demoLocateBtn')!;
+  const locateHint = document.getElementById('demoLocateHint')!;
+  const panel = document.getElementById('demoPanel')!;
+
+  let startId = ENTRANCE_ID;
+  let endId: string | null = null;
+
+  function cellButton(row: number, col: number): HTMLElement | null {
+    return grid.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+  }
+
+  function clearRouteClasses() {
+    grid.querySelectorAll('.demo-cell').forEach((el) => {
+      el.classList.remove('is-path', 'is-start', 'is-end');
+    });
+  }
+
+  function renderRoute() {
+    clearRouteClasses();
+    const startCell = cellByRoomId(startId);
+    cellButton(startCell.row, startCell.col)?.classList.add('is-start');
+
+    if (!endId) return;
+
+    const endCell = cellByRoomId(endId);
+    cellButton(endCell.row, endCell.col)?.classList.add('is-end');
+
+    const result = findPath(startId, endId);
+    if (!result) {
+      hint.textContent = 'No route found between those two points.';
+      return;
+    }
+
+    result.path.forEach((cell, i) => {
+      window.setTimeout(() => {
+        cellButton(cell.row, cell.col)?.classList.add('is-path');
+      }, i * 70);
+    });
+
+    const room = ROOMS.find((r) => r.id === endId);
+    hint.textContent = `Destination: ${room?.name} · ${result.path.length - 1} steps`;
+  }
+
+  function setDestination(roomId: string) {
+    endId = roomId;
+    renderRoute();
+  }
+
+  grid.querySelectorAll<HTMLElement>('.demo-cell[data-room-id]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const roomId = el.dataset.roomId!;
+      if (roomId === ENTRANCE_ID) {
+        startId = ENTRANCE_ID;
+        renderRoute();
+        return;
+      }
+      setDestination(roomId);
+    });
+  });
+
+  function runSearch() {
+    const q = queryInput.value.trim();
+    if (!q) return;
+    const result = resolveQuery(q);
+    if (result.roomId) {
+      setDestination(result.roomId);
+    } else {
+      hint.textContent = `Could not match "${q}" to a room in this demo.`;
+    }
+  }
+
+  searchBtn.addEventListener('click', runSearch);
+  queryInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') runSearch();
+  });
+
+  lectureBtn.addEventListener('click', () => setDestination('B'));
+
+  panel.querySelectorAll<HTMLElement>('[data-theme-choice]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      panel.dataset.theme = btn.dataset.themeChoice;
+      panel.querySelectorAll('[data-theme-choice]').forEach((b) => b.classList.toggle('is-active', b === btn));
+    });
+  });
+
+  locateBtn.addEventListener('click', () => {
+    if (!('geolocation' in navigator)) {
+      locateHint.textContent = 'Location is not available in this browser.';
+      return;
+    }
+    locateHint.textContent = 'Locating…';
+    navigator.geolocation.getCurrentPosition(
+      () => {
+        startId = ENTRANCE_ID;
+        locateHint.textContent = "Located outdoors. Once you're inside, indoor sensors take over from here.";
+        renderRoute();
+      },
+      () => {
+        locateHint.textContent = 'Location unavailable, starting from the entrance instead.';
+        startId = ENTRANCE_ID;
+        renderRoute();
+      },
+      { timeout: 6000 },
+    );
+  });
+
+  const SpeechRecognitionCtor =
+    (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+  if (SpeechRecognitionCtor) {
+    const recognition = new SpeechRecognitionCtor();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    let listening = false;
+    let safetyTimer: number | null = null;
+
+    function forceStop(hard: boolean) {
+      if (safetyTimer) window.clearTimeout(safetyTimer);
+      safetyTimer = null;
+      try {
+        hard ? recognition.abort() : recognition.stop();
+      } catch {
+        /* not running, ignore */
+      }
+    }
+
+    micBtn.addEventListener('click', () => {
+      if (listening) {
+        forceStop(true);
+        return;
+      }
+      try {
+        recognition.lang = 'en-US';
+        recognition.start();
+      } catch {
+        /* already running or blocked, ignore */
+      }
+    });
+
+    recognition.addEventListener('start', () => {
+      listening = true;
+      micBtn.classList.add('is-listening');
+      /* Timer starts on real listening, not on click, so a slow
+         permission prompt can't eat into it. */
+      safetyTimer = window.setTimeout(() => forceStop(true), 8000);
+    });
+    recognition.addEventListener('end', () => {
+      listening = false;
+      micBtn.classList.remove('is-listening');
+      if (safetyTimer) window.clearTimeout(safetyTimer);
+      safetyTimer = null;
+    });
+    recognition.addEventListener('result', (e: any) => {
+      queryInput.value = e.results[0][0].transcript;
+      forceStop(false);
+      runSearch();
+    });
+    recognition.addEventListener('error', () => {
+      /* Some browsers skip "end" after "error", so reset state here too. */
+      listening = false;
+      micBtn.classList.remove('is-listening');
+      forceStop(true);
+    });
+
+    window.addEventListener('pagehide', () => forceStop(true));
+    window.addEventListener('beforeunload', () => forceStop(true));
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) forceStop(true);
+    });
+  } else {
+    micBtn.style.display = 'none';
+  }
+
+  renderRoute();
+</script>
+
+<style>
+  .page-header {
+    padding-block: var(--space-6) var(--space-5);
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
+  }
+  .page-header h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+  .lede {
+    max-width: 60ch;
+    font-size: 1.125rem;
+  }
+  .page-header__visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (min-width: 700px) {
+    .page-header {
+      grid-template-columns: 1fr auto;
+    }
+    .page-header__visual {
+      justify-content: flex-end;
+    }
+  }
+
+  .section {
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-line);
+  }
+  .section-lede {
+    font-size: 1.05rem;
+  }
+
+  .split-section {
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
+  }
+  .split-section__visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (min-width: 700px) {
+    .split-section {
+      grid-template-columns: auto 1fr;
+    }
+    .split-section__visual {
+      justify-content: flex-start;
+      order: 1;
+    }
+    .split-section__text {
+      order: 2;
+    }
+  }
+
+  /* ---------------- demo panel ---------------- */
+
+  .demo-panel {
+    --demo-accent: var(--color-accent);
+    --demo-ink: var(--color-ink);
+    --demo-bg: var(--color-paper);
+    --demo-line: var(--color-line);
+    --demo-graphite: var(--color-graphite);
+    border: 1px solid var(--demo-line);
+    border-radius: 22px;
+    padding: var(--space-4);
+    background: var(--demo-bg);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .demo-panel[data-theme='highfidelity'] {
+    --demo-accent: #0047a8;
+    --demo-ink: #100c00;
+    --demo-bg: #fff6e6;
+    --demo-line: #d9c69f;
+    --demo-graphite: #6b5e42;
+  }
+
+  .demo-panel[data-theme='mono'] {
+    --demo-accent: #000000;
+    --demo-ink: #000000;
+    --demo-bg: #ffffff;
+    --demo-line: #000000;
+    --demo-graphite: #333333;
+  }
+
+  .demo-panel__bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 700px) {
+    .demo-panel__bar {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+  }
+
+  .demo-search {
+    display: flex;
+    gap: var(--space-1);
+    flex: 1;
+    max-width: 420px;
+  }
+
+  .demo-search input {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    border: 1px solid var(--demo-line);
+    border-radius: 10px;
+    background: var(--demo-bg);
+    color: var(--demo-ink);
+    font-size: 0.95rem;
+    font-family: inherit;
+  }
+
+  .demo-search input:focus-visible {
+    outline: 2px solid var(--demo-accent);
+    outline-offset: 1px;
+  }
+
+  .demo-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border: 1px solid var(--demo-line);
+    border-radius: 10px;
+    background: var(--demo-bg);
+    color: var(--demo-ink);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .demo-icon-btn:hover {
+    color: var(--demo-accent);
+    border-color: var(--demo-accent);
+  }
+
+  .demo-icon-btn.is-listening {
+    color: var(--demo-bg);
+    background: var(--demo-accent);
+    border-color: var(--demo-accent);
+  }
+
+  .demo-run-btn {
+    min-height: 44px;
+    padding-inline: var(--space-3);
+    border: 1px solid var(--demo-accent);
+    border-radius: 10px;
+    background: var(--demo-accent);
+    color: var(--demo-bg);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .demo-theme-switch {
+    display: flex;
+    gap: var(--space-1);
+    flex-wrap: wrap;
+  }
+
+  .demo-theme-switch button {
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    border: 1px solid var(--demo-line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--demo-graphite);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+  }
+
+  .demo-theme-switch button.is-active {
+    border-color: var(--demo-accent);
+    color: var(--demo-accent);
+    font-weight: 700;
+  }
+
+  .demo-hint {
+    margin: var(--space-3) 0 0;
+    min-height: 1.5em;
+    font-size: 0.95rem;
+    color: var(--demo-graphite);
+  }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 5px;
+    max-width: 460px;
+    margin: var(--space-2) auto 0;
+  }
+
+  .demo-cell {
+    aspect-ratio: 1;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+
+  .demo-cell--wall {
+    background: var(--demo-ink);
+    opacity: 0.12;
+  }
+
+  .demo-cell--floor {
+    background: var(--demo-ink);
+    opacity: 0.05;
+  }
+
+  .demo-cell--room,
+  .demo-cell--entrance {
+    background: var(--demo-bg);
+    border: 1.5px solid var(--demo-accent);
+    color: var(--demo-accent);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .demo-cell--room:hover,
+  .demo-cell--entrance:hover {
+    background: var(--demo-accent);
+    color: var(--demo-bg);
+  }
+
+  .demo-cell.is-start {
+    outline: 2px solid var(--demo-accent);
+    outline-offset: 1px;
+  }
+
+  .demo-cell.is-end {
+    background: var(--demo-accent);
+    color: var(--demo-bg);
+  }
+
+  .demo-cell.is-path:not(.demo-cell--room):not(.demo-cell--entrance) {
+    background: var(--demo-accent);
+    opacity: 0.35;
+  }
+
+  .demo-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+    justify-content: center;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.75rem;
+    color: var(--demo-graphite);
+  }
+
+  .demo-legend__num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.2em;
+    height: 1.2em;
+    border: 1px solid var(--demo-accent);
+    border-radius: 50%;
+    color: var(--demo-accent);
+    font-weight: 700;
+    margin-right: 0.25em;
+  }
+
+  .demo-lecture {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--demo-line);
+  }
+
+  .demo-lecture__label {
+    color: var(--demo-accent);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 0.2rem;
+  }
+
+  .demo-lecture__title {
+    margin: 0;
+    color: var(--demo-ink);
+  }
+
+  .demo-lecture__btn {
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    border: 1px solid var(--demo-line);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--demo-ink);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .demo-lecture__btn:hover {
+    border-color: var(--demo-accent);
+    color: var(--demo-accent);
+  }
+
+  .demo-locate {
+    margin-top: var(--space-3);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .demo-locate__btn {
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    border: 1px dashed var(--demo-line);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--demo-graphite);
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+
+  .demo-locate__btn:hover {
+    border-color: var(--demo-accent);
+    color: var(--demo-accent);
+  }
+
+  .demo-locate__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--demo-graphite);
+  }
+
+  .demo-disclaimer {
+    color: var(--color-graphite);
+    font-size: 0.85rem;
+  }
+</style>

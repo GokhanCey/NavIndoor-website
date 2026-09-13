@@ -1,10 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Screenshot from '../../components/Screenshot.astro';
 import IconPanel from '../../components/IconPanel.astro';
 import { useTranslations } from '../../i18n/utils';
-
-import settingsPage from '../../assets/screenshots/settings-page.png';
 
 const locale = 'en' as const;
 const t = useTranslations(locale);
@@ -12,12 +9,17 @@ const t = useTranslations(locale);
 
 <BaseLayout locale={locale} active="accessibility" title={t('nav.accessibility')}>
   <section class="wrapper page-header">
-    <h1>{t('nav.accessibility')}</h1>
-    <p class="lede">
-      Accessibility isn't a feature added on top. It's the project's stated
-      goal: making Sapienza's Humanities buildings navigable for every
-      student, with particular attention to visual and motor impairments.
-    </p>
+    <div class="page-header__text">
+      <h1>{t('nav.accessibility')}</h1>
+      <p class="lede">
+        Accessibility isn't a feature added on top. It's the project's stated
+        goal: making Sapienza's Humanities buildings navigable for every
+        student, with particular attention to visual and motor impairments.
+      </p>
+    </div>
+    <div class="page-header__visual">
+      <IconPanel icon="inclusive" label="Built for every student" />
+    </div>
   </section>
 
   <section class="wrapper section split-section">
@@ -35,7 +37,7 @@ const t = useTranslations(locale);
     </div>
   </section>
 
-  <section class="wrapper section split-section" style="--visual-width: 200px">
+  <section class="wrapper section split-section">
     <div class="split-section__text">
       <h2>Built for low vision</h2>
       <p class="section-lede">
@@ -46,7 +48,7 @@ const t = useTranslations(locale);
       </p>
     </div>
     <div class="split-section__visual">
-      <Screenshot src={settingsPage} alt="NavIndoor settings screen with the Low Vision Support toggle" width={200} />
+      <IconPanel icon="lowvision" label="Low vision support" />
     </div>
   </section>
 
@@ -86,6 +88,9 @@ const t = useTranslations(locale);
 <style>
   .page-header {
     padding-block: var(--space-6) var(--space-5);
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
   }
   .page-header h1 {
     font-size: clamp(2rem, 4vw, 3rem);
@@ -93,6 +98,19 @@ const t = useTranslations(locale);
   .lede {
     max-width: 60ch;
     font-size: 1.125rem;
+  }
+  .page-header__visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (min-width: 700px) {
+    .page-header {
+      grid-template-columns: 1fr auto;
+    }
+    .page-header__visual {
+      justify-content: flex-end;
+    }
   }
 
   .section {
@@ -115,7 +133,7 @@ const t = useTranslations(locale);
 
   @media (min-width: 700px) {
     .split-section {
-      grid-template-columns: var(--visual-width, auto) 1fr;
+      grid-template-columns: auto 1fr;
     }
     .split-section__visual {
       justify-content: flex-start;

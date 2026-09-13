@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import IconPanel from '../../components/IconPanel.astro';
 import { useTranslations } from '../../i18n/utils';
 
 const locale = 'it' as const;
@@ -27,8 +28,13 @@ const team = [
 
 <BaseLayout locale={locale} active="team" title={t('nav.team')}>
   <section class="wrapper page-header">
-    <h1>{t('nav.team')}</h1>
-    <p class="lede">"Nessun singolo senso dovrebbe essere indispensabile per trovare la propria strada."<br />Dalla ricerca all'ultima riga di codice, ecco chi ha costruito NavIndoor.</p>
+    <div class="page-header__text">
+      <h1>{t('nav.team')}</h1>
+      <p class="lede">"Nessun singolo senso dovrebbe essere indispensabile per trovare la propria strada."<br />Dalla ricerca all'ultima riga di codice, ecco chi ha costruito NavIndoor.</p>
+    </div>
+    <div class="page-header__visual">
+      <IconPanel icon="quote" label="Il nostro principio guida" />
+    </div>
   </section>
 
   <section class="wrapper team-grid">
@@ -46,6 +52,9 @@ const team = [
 <style>
   .page-header {
     padding-block: var(--space-6) var(--space-4);
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
   }
   .page-header h1 {
     font-size: clamp(2rem, 4vw, 3rem);
@@ -54,6 +63,19 @@ const team = [
     max-width: 60ch;
     font-size: 1.125rem;
     font-style: italic;
+  }
+  .page-header__visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (min-width: 700px) {
+    .page-header {
+      grid-template-columns: 1fr auto;
+    }
+    .page-header__visual {
+      justify-content: flex-end;
+    }
   }
   .team-grid {
     padding-block: var(--space-5);

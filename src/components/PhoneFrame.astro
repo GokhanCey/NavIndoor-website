@@ -1,0 +1,54 @@
+---
+---
+
+<div class="phone-frame">
+  <div class="phone-frame__notch"></div>
+  <div class="phone-frame__screen">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .phone-frame {
+    position: relative;
+    display: inline-block;
+    padding: 12px;
+    border-radius: 44px;
+    background: linear-gradient(160deg, #3a3a3a, #0c0c0c);
+    box-shadow:
+      0 30px 60px -30px rgba(19, 19, 19, 0.45),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    transition: transform 0.25s ease;
+  }
+
+  .phone-frame:hover {
+    transform: translateY(-4px);
+  }
+
+  .phone-frame__screen {
+    position: relative;
+    border-radius: 34px;
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  .phone-frame__screen :global(.shot) {
+    width: 100%;
+    border: none;
+    border-radius: 34px;
+    box-shadow: none;
+    transform: none !important;
+  }
+
+  .phone-frame__notch {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30%;
+    height: 22px;
+    background: #0c0c0c;
+    border-radius: 12px;
+    z-index: 2;
+  }
+</style>

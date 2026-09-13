@@ -1,5 +1,15 @@
 ---
-type IconName = 'modalities' | 'screenreader' | 'compass' | 'building' | 'research';
+type IconName =
+  | 'modalities'
+  | 'screenreader'
+  | 'compass'
+  | 'building'
+  | 'research'
+  | 'lowvision'
+  | 'inclusive'
+  | 'quote'
+  | 'route'
+  | 'mic';
 
 interface Props {
   icon: IconName;
@@ -55,6 +65,42 @@ const { icon, label } = Astro.props;
         <line x1="14" y1="23" x2="20" y2="23" />
         <circle cx="30" cy="30" r="7" />
         <line x1="35" y1="35" x2="40" y2="40" />
+      </svg>
+    )}
+    {icon === 'lowvision' && (
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 24c4.5-8.5 12.5-14 19-14s14.5 5.5 19 14c-4.5 8.5-12.5 14-19 14S9.5 32.5 5 24z" />
+        <circle cx="24" cy="24" r="6.5" />
+      </svg>
+    )}
+    {icon === 'inclusive' && (
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="24" cy="9" r="4" />
+        <path d="M24 15v13" />
+        <path d="M14 20h20" />
+        <path d="M24 28l-8 11" />
+        <path d="M24 28l8 11" />
+      </svg>
+    )}
+    {icon === 'quote' && (
+      <svg viewBox="0 0 48 48" fill="currentColor" stroke="none" aria-hidden="true">
+        <path d="M9 27c0-7.5 4-13 10.5-15.5l1.8 4c-4 1.7-6.3 4.4-6.3 7.5h6v11H9z" />
+        <path d="M26.5 27c0-7.5 4-13 10.5-15.5l1.8 4c-4 1.7-6.3 4.4-6.3 7.5h6v11h-12z" />
+      </svg>
+    )}
+    {icon === 'route' && (
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="10" cy="35" r="3" fill="currentColor" stroke="none" />
+        <path d="M10 35c7-1 7-9 13-11s6-11 13-13" stroke-dasharray="1 5" />
+        <path d="M30 5l8 2-5.5 6.5z" fill="currentColor" stroke="none" />
+      </svg>
+    )}
+    {icon === 'mic' && (
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="18" y="7" width="12" height="21" rx="6" />
+        <path d="M12 22a12 12 0 0 0 24 0" />
+        <line x1="24" y1="34" x2="24" y2="40" />
+        <line x1="16" y1="40" x2="32" y2="40" />
       </svg>
     )}
   </div>

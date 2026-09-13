@@ -4,6 +4,7 @@ export const defaultLocale: Locale = 'it';
 
 export const routes = {
   project: '',
+  demo: 'demo',
   accessibility: 'accessibility',
   publications: 'publications',
   team: 'team',

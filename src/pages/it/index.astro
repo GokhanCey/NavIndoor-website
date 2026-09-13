@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Screenshot from '../../components/Screenshot.astro';
 import IconPanel from '../../components/IconPanel.astro';
+import PhoneFrame from '../../components/PhoneFrame.astro';
 import { useTranslations } from '../../i18n/utils';
 
 import mapView from '../../assets/screenshots/map-view.png';
@@ -45,27 +46,31 @@ const gallery = [
     image: settingsPage,
     alt: 'Schermata delle impostazioni di NavIndoor con il supporto per la bassa visione',
     caption: 'Le impostazioni di accessibilità, in primo piano',
+    tilt: -8,
   },
   {
     image: settingsHighFidelity,
     alt: 'Schermata delle impostazioni di NavIndoor nel tema High Fidelity',
     caption: 'Cambia palette con quella più semplice da leggere per te',
+    tilt: -3,
   },
   {
     image: calendarEmpty,
     alt: 'NavIndoor che chiede di collegare un calendario accademico',
     caption: 'Le tue lezioni, a portata di tocco',
+    tilt: 3,
   },
   {
     image: onboardingPermissions,
     alt: 'Schermata di onboarding di NavIndoor che spiega i permessi di posizione e movimento',
     caption: 'Permessi spiegati con chiarezza, niente di nascosto',
+    tilt: 8,
   },
 ];
 ---
 
 <BaseLayout locale={locale} active="project" title={t('nav.project')}>
-  <section class="hero wrapper" style="--visual-width: 270px">
+  <section class="hero wrapper" style="--visual-width: 294px">
     <div class="hero__text">
       <p class="mono eyebrow">Gamification Lab &middot; Sapienza Università di Roma</p>
       <h1>{t('site.tagline')}</h1>
@@ -76,7 +81,9 @@ const gallery = [
       </div>
     </div>
     <div class="hero__visual">
-      <Screenshot src={mapView} alt="NavIndoor con la planimetria dell'edificio Sciarra" width={270} loading="eager" />
+      <PhoneFrame>
+        <Screenshot src={mapView} alt="NavIndoor con la planimetria dell'edificio Sciarra" width={270} loading="eager" />
+      </PhoneFrame>
     </div>
   </section>
 
@@ -122,8 +129,8 @@ const gallery = [
     <h2>In azione</h2>
     <ul class="gallery">
       {
-        gallery.map((item) => (
-          <li class="gallery-item">
+        gallery.map((item, i) => (
+          <li class="gallery-item" style={`--tilt: ${item.tilt}deg; --z: ${i}`}>
             <Screenshot src={item.image} alt={item.alt} width={240} />
             <p class="gallery-caption">{item.caption}</p>
           </li>
@@ -269,5 +276,54 @@ const gallery = [
     font-size: 0.9rem;
     color: var(--color-graphite);
     max-width: 30ch;
+  }
+
+  @media (min-width: 900px) {
+    .gallery {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 0;
+      padding-block: var(--space-4) 0;
+    }
+
+    .gallery-item {
+      position: relative;
+      flex-direction: column;
+      margin-inline: -22px;
+      transform: rotate(var(--tilt, 0deg));
+      z-index: var(--z, 0);
+      transition: transform 0.25s ease, z-index 0.25s step-end;
+    }
+
+    .gallery-item:hover,
+    .gallery-item:focus-within {
+      transform: rotate(0deg) translateY(-10px) scale(1.06);
+      z-index: 10;
+      transition: transform 0.25s ease, z-index 0s;
+    }
+
+    .gallery-item :global(.shot) {
+      width: 220px;
+    }
+
+    .gallery-caption {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-top: var(--space-2);
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: 20ch;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .gallery-item:hover .gallery-caption,
+    .gallery-item:focus-within .gallery-caption {
+      opacity: 1;
+    }
   }
 </style>

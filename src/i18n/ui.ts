@@ -1,6 +1,7 @@
 export const ui = {
   en: {
     'nav.project': 'Project',
+    'nav.demo': 'Demo',
     'nav.accessibility': 'Accessibility',
     'nav.publications': 'Publications',
     'nav.team': 'Team',
@@ -21,6 +22,7 @@ export const ui = {
   },
   it: {
     'nav.project': 'Progetto',
+    'nav.demo': 'Demo',
     'nav.accessibility': 'Accessibilità',
     'nav.publications': 'Pubblicazioni',
     'nav.team': 'Team',
